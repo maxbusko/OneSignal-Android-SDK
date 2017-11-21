@@ -117,14 +117,14 @@ class GenerateNotification {
                 AlertDialog.Builder builder = new AlertDialog.Builder(activity);
 
                 View view  = LayoutInflater.from(activity).inflate(R.layout.btone_dialog_notification, null);
-                ((TextView)view.findViewById(R.id.title)).setText(getTitle(gcmJson));
+                ((TextView)view.findViewById(R.id.title)).setText("BTONE");
                 ((TextView)view.findViewById(R.id.message)).setText(gcmJson.optString("alert"));
 
                 //builder.setTitle(getTitle(gcmJson));
                 //builder.setMessage(gcmJson.optString("alert"));
                 builder.setView(view);
 
-                List<String> buttonsLabels = new ArrayList<>();
+                /*List<String> buttonsLabels = new ArrayList<>();
                 List<String> buttonIds = new ArrayList<>();
 
                 addAlertButtons(activity, gcmJson, buttonsLabels, buttonIds);
@@ -155,24 +155,24 @@ class GenerateNotification {
                         } else // No action buttons, close button simply pressed.
                             NotificationOpenedProcessor.processIntent(activity, finalButtonIntent);
                     }
-                };
+                };*/
 
                 // Back button pressed
-                builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                /*builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
                     @Override
                     public void onCancel(DialogInterface dialogInterface) {
                         NotificationOpenedProcessor.processIntent(activity, finalButtonIntent);
                     }
-                });
+                });*/
 
-                for (int i = 0; i < buttonsLabels.size(); i++) {
+                /*for (int i = 0; i < buttonsLabels.size(); i++) {
                     if (i == 0)
                         builder.setNeutralButton(buttonsLabels.get(i), buttonListener);
                     else if (i == 1)
                         builder.setNegativeButton(buttonsLabels.get(i), buttonListener);
                     else if (i == 2)
                         builder.setPositiveButton(buttonsLabels.get(i), buttonListener);
-                }
+                }*/
 
                 AlertDialog alertDialog = builder.create();
                 alertDialog.setCanceledOnTouchOutside(false);
