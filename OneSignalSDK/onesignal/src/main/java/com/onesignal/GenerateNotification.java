@@ -111,8 +111,13 @@ class GenerateNotification {
          @Override
          public void run() {
             AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-            builder.setTitle(getTitle(gcmJson));
-            builder.setMessage(gcmJson.toString());
+
+            View view = LayoutInflater.from(this).inflate(R.layout.btone_dialog_notification, null);
+            ((TextView)view.findViewById(R.id.title)).setText(getTitle(gcmJson));
+            ((TextView)view.findViewById(R.id.message)).setText(gcmJson.optString("alert"));
+            builder.setView(view);
+            //builder.setTitle(getTitle(gcmJson));
+            //builder.setMessage(gcmJson.toString());
 
             List<String> buttonsLabels = new ArrayList<>();
             List<String> buttonIds = new ArrayList<>();
