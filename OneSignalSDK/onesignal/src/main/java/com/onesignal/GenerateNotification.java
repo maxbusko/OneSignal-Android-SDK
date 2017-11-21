@@ -117,7 +117,7 @@ class GenerateNotification {
                 AlertDialog.Builder builder = new AlertDialog.Builder(activity);
 
                 View view  = LayoutInflater.from(activity).inflate(R.layout.btone_dialog_notification, null);
-                ((TextView)view.findViewById(R.id.title)).setText("BTONE");
+                ((TextView)view.findViewById(R.id.title)).setText("BTONE"+gcmJson.optJSONObject("custom").optJSONObject("a").optInt("orderId"));
                 ((TextView)view.findViewById(R.id.message)).setText(gcmJson.optString("alert"));
 
                 //builder.setTitle(getTitle(gcmJson));
