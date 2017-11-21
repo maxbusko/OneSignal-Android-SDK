@@ -120,8 +120,9 @@ class GenerateNotification {
                 ((TextView)view.findViewById(R.id.title)).setText(getTitle(gcmJson));
                 ((TextView)view.findViewById(R.id.message)).setText(gcmJson.optString("alert"));
 
-                builder.setTitle(getTitle(gcmJson));
-                builder.setMessage(gcmJson.optString("alert"));
+                //builder.setTitle(getTitle(gcmJson));
+                //builder.setMessage(gcmJson.optString("alert"));
+                builder.setView(view);
 
                 List<String> buttonsLabels = new ArrayList<>();
                 List<String> buttonIds = new ArrayList<>();
