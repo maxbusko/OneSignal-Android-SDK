@@ -118,7 +118,7 @@ class GenerateNotification {
                 //builder.setTitle(getTitle(gcmJson));
                 //builder.setMessage(gcmJson.toString());
 
-                List<String> buttonsLabels = new ArrayList<>();
+                /*List<String> buttonsLabels = new ArrayList<>();
                 List<String> buttonIds = new ArrayList<>();
 
                 addAlertButtons(activity, gcmJson, buttonsLabels, buttonIds);
@@ -150,10 +150,10 @@ class GenerateNotification {
                         } else // No action buttons, close button simply pressed.
                             NotificationOpenedProcessor.processIntent(activity, finalButtonIntent);
                     }
-                };
+                };*/
 
                 // Back button pressed
-                builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                /*builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
                     @Override
                     public void onCancel(DialogInterface dialogInterface) {
                         NotificationOpenedProcessor.processIntent(activity, finalButtonIntent);
@@ -167,7 +167,7 @@ class GenerateNotification {
                         builder.setNegativeButton(buttonsLabels.get(i), buttonListener);
                     else if (i == 2)
                         builder.setPositiveButton(buttonsLabels.get(i), buttonListener);
-                }
+                }*/
 
                 AlertDialog alertDialog = builder.create();
                 alertDialog.setCanceledOnTouchOutside(false);
