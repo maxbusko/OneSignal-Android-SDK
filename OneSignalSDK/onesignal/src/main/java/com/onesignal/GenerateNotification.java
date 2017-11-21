@@ -1,21 +1,21 @@
 /**
  * Modified MIT License
- * <p>
+ *
  * Copyright 2017 OneSignal
- * <p>
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * <p>
+ *
  * 1. The above copyright notice and this permission notice shall be included in
  * all copies or substantial portions of the Software.
- * <p>
+ *
  * 2. All copies of substantial portions of the Software may only be used in connection
  * with services provided by OneSignal.
- * <p>
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -90,7 +90,8 @@ class GenerateNotification {
         if (packageManager.queryBroadcastReceivers(intent, 0).size() > 0) {
             openerIsBroadcast = true;
             notificationOpenedClass = NotificationOpenedReceiver.class;
-        } else
+        }
+        else
             notificationOpenedClass = NotificationOpenedActivity.class;
     }
 
@@ -110,15 +111,10 @@ class GenerateNotification {
             @Override
             public void run() {
                 AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                builder.setTitle(getTitle(gcmJson));
+                builder.setMessage(gcmJson.optString("alert"));
 
-                View view = LayoutInflater.from(activity).inflate(R.layout.btone_dialog_notification, null);
-                ((TextView) view.findViewById(R.id.title)).setText(getTitle(gcmJson));
-                ((TextView) view.findViewById(R.id.message)).setText(gcmJson.optString("alert"));
-                builder.setView(view);
-                //builder.setTitle(getTitle(gcmJson));
-                //builder.setMessage(gcmJson.toString());
-
-                /*List<String> buttonsLabels = new ArrayList<>();
+                List<String> buttonsLabels = new ArrayList<>();
                 List<String> buttonIds = new ArrayList<>();
 
                 addAlertButtons(activity, gcmJson, buttonsLabels, buttonIds);
@@ -145,15 +141,14 @@ class GenerateNotification {
                                 finalButtonIntent.putExtra("onesignal_data", newJsonData.toString());
 
                                 NotificationOpenedProcessor.processIntent(activity, finalButtonIntent);
-                            } catch (Throwable t) {
-                            }
+                            } catch (Throwable t) {}
                         } else // No action buttons, close button simply pressed.
                             NotificationOpenedProcessor.processIntent(activity, finalButtonIntent);
                     }
-                };*/
+                };
 
                 // Back button pressed
-                /*builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
                     @Override
                     public void onCancel(DialogInterface dialogInterface) {
                         NotificationOpenedProcessor.processIntent(activity, finalButtonIntent);
@@ -167,7 +162,7 @@ class GenerateNotification {
                         builder.setNegativeButton(buttonsLabels.get(i), buttonListener);
                     else if (i == 2)
                         builder.setPositiveButton(buttonsLabels.get(i), buttonListener);
-                }*/
+                }
 
                 AlertDialog alertDialog = builder.create();
                 alertDialog.setCanceledOnTouchOutside(false);
@@ -219,7 +214,7 @@ class GenerateNotification {
             String channelId = NotificationChannelManager.createNotificationChannel(notifJob);
             // Will throw if app is using 26.0.0-beta1 or older of the support library.
             notifBuilder = new NotificationCompat.Builder(currentContext, channelId);
-        } catch (Throwable t) {
+        } catch(Throwable t) {
             notifBuilder = new NotificationCompat.Builder(currentContext);
         }
 
@@ -240,7 +235,8 @@ class GenerateNotification {
                 long[] vibrationPattern = OSUtils.parseVibrationPattern(gcmBundle);
                 if (vibrationPattern != null)
                     notifBuilder.setVibrate(vibrationPattern);
-            } else
+            }
+            else
                 notificationDefaults = Notification.DEFAULT_VIBRATE;
         }
 
@@ -251,30 +247,28 @@ class GenerateNotification {
             } catch (Throwable t) {
                 notificationDefaults |= Notification.DEFAULT_LIGHTS;
             } // Can throw if an old android support lib is used or parse error.
-        } else
+        }
+        else
             notificationDefaults |= Notification.DEFAULT_LIGHTS;
 
         if (notifJob.shownTimeStamp != null) {
             try {
                 notifBuilder.setWhen(notifJob.shownTimeStamp * 1000L);
-            } catch (Throwable t) {
-            } // Can throw if an old android support lib is used.
+            } catch (Throwable t) {} // Can throw if an old android support lib is used.
         }
 
         try {
             BigInteger accentColor = getAccentColor(gcmBundle);
             if (accentColor != null)
                 notifBuilder.setColor(accentColor.intValue());
-        } catch (Throwable t) {
-        } // Can throw if an old android support lib is used.
+        } catch (Throwable t) {} // Can throw if an old android support lib is used.
 
         try {
             int visibility = NotificationCompat.VISIBILITY_PUBLIC;
             if (gcmBundle.has("vis"))
                 visibility = Integer.parseInt(gcmBundle.optString("vis"));
             notifBuilder.setVisibility(visibility);
-        } catch (Throwable t) {
-        } // Can throw if an old android support lib is used or parse error
+        } catch (Throwable t) {} // Can throw if an old android support lib is used or parse error
 
         Bitmap largeIcon = getLargeIcon(gcmBundle);
         if (largeIcon != null) {
@@ -330,18 +324,18 @@ class GenerateNotification {
             OneSignal.Log(OneSignal.LOG_LEVEL.ERROR, "Could not set background notification image!", t);
         }
 
-      /*if (notifJob.overrideSettings != null && notifJob.overrideSettings.extender != null) {
-         notifJob.orgFlags = notifBuilder.mNotification.flags;
-         notifJob.orgSound = notifBuilder.mNotification.sound;
-         notifBuilder.extend(notifJob.overrideSettings.extender);
-    
-         notifJob.overriddenBodyFromExtender = notifBuilder.mContentText;
-         notifJob.overriddenTitleFromExtender = notifBuilder.mContentTitle;
-         if (!notifJob.restoring) {
-            notifJob.overriddenFlags = notifBuilder.mNotification.flags;
-            notifJob.overriddenSound = notifBuilder.mNotification.sound;
-         }
-      }*/
+        if (notifJob.overrideSettings != null && notifJob.overrideSettings.extender != null) {
+            notifJob.orgFlags = notifBuilder.mNotification.flags;
+            notifJob.orgSound = notifBuilder.mNotification.sound;
+            notifBuilder.extend(notifJob.overrideSettings.extender);
+
+            notifJob.overriddenBodyFromExtender = notifBuilder.mContentText;
+            notifJob.overriddenTitleFromExtender = notifBuilder.mContentTitle;
+            if (!notifJob.restoring) {
+                notifJob.overriddenFlags = notifBuilder.mNotification.flags;
+                notifJob.overriddenSound = notifBuilder.mNotification.sound;
+            }
+        }
 
         // Keeps notification from playing sound + vibrating again
         if (notifJob.restoring)
@@ -358,14 +352,16 @@ class GenerateNotification {
 
             try {
                 notifBuilder.setGroupAlertBehavior(NotificationCompat.GROUP_ALERT_SUMMARY);
-            } catch (Throwable t) {
+            }
+            catch (Throwable t) {
                 //do nothing in this case...Android support lib 26 isn't in the project
             }
 
             notification = createSingleNotificationBeforeSummaryBuilder(notifJob, notifBuilder);
 
             createSummaryNotification(notifJob, oneSignalNotificationBuilder);
-        } else {
+        }
+        else {
             PendingIntent contentIntent = getNewActionPendingIntent(random.nextInt(), getNewBaseIntent(notificationId).putExtra("onesignal_data", gcmBundle.toString()));
             notifBuilder.setContentIntent(contentIntent);
             PendingIntent deleteIntent = getNewActionPendingIntent(random.nextInt(), getNewBaseDeleteIntent(notificationId));
@@ -424,8 +420,7 @@ class GenerateNotification {
             Field extraNotificationField = notification.getClass().getField("extraNotification");
             extraNotificationField.setAccessible(true);
             extraNotificationField.set(notification, miuiNotification);
-        } catch (Throwable t) {
-        } // Ignore if not a Xiaomi device
+        } catch (Throwable t) {} // Ignore if not a Xiaomi device
     }
 
     static void updateSummaryNotification(NotificationGenerationJob notifJob) {
@@ -455,16 +450,16 @@ class GenerateNotification {
         try {
             SQLiteDatabase readableDb = dbHelper.getReadableDbWithRetries();
 
-            String[] retColumn = {NotificationTable.COLUMN_NAME_ANDROID_NOTIFICATION_ID,
+            String[] retColumn = { NotificationTable.COLUMN_NAME_ANDROID_NOTIFICATION_ID,
                     NotificationTable.COLUMN_NAME_FULL_DATA,
                     NotificationTable.COLUMN_NAME_IS_SUMMARY,
                     NotificationTable.COLUMN_NAME_TITLE,
-                    NotificationTable.COLUMN_NAME_MESSAGE};
+                    NotificationTable.COLUMN_NAME_MESSAGE };
 
-            String whereStr = NotificationTable.COLUMN_NAME_GROUP_ID + " = ? AND " +   // Where String
+            String whereStr =  NotificationTable.COLUMN_NAME_GROUP_ID + " = ? AND " +   // Where String
                     NotificationTable.COLUMN_NAME_DISMISSED + " = 0 AND " +
                     NotificationTable.COLUMN_NAME_OPENED + " = 0";
-            String[] whereArgs = {group};
+            String[] whereArgs = { group };
 
             // Make sure to omit any old existing matching android ids in-case we are replacing it.
             if (!updateSummary && notifJob.getAndroidId() != -1)
@@ -516,7 +511,8 @@ class GenerateNotification {
                     }
                 }
             }
-        } finally {
+        }
+        finally {
             if (cursor != null && !cursor.isClosed())
                 cursor.close();
         }
@@ -567,7 +563,8 @@ class GenerateNotification {
 
             try {
                 summaryBuilder.setGroupAlertBehavior(NotificationCompat.GROUP_ALERT_SUMMARY);
-            } catch (Throwable t) {
+            }
+            catch (Throwable t) {
                 //do nothing in this case...Android support lib 26 isn't in the project
             }
 
@@ -596,13 +593,14 @@ class GenerateNotification {
                 inboxStyle.addLine(spannableString);
             }
 
-            for (SpannableString line : summaryList)
+            for(SpannableString line : summaryList)
                 inboxStyle.addLine(line);
             inboxStyle.setBigContentTitle(summaryMessage);
             summaryBuilder.setStyle(inboxStyle);
 
             summaryNotification = summaryBuilder.build();
-        } else {
+        }
+        else {
             // First notification with this group key, post like a normal notification.
             NotificationCompat.Builder summaryBuilder = notifBuilder.compatBuilder;
 
@@ -620,7 +618,8 @@ class GenerateNotification {
 
             try {
                 summaryBuilder.setGroupAlertBehavior(NotificationCompat.GROUP_ALERT_SUMMARY);
-            } catch (Throwable t) {
+            }
+            catch (Throwable t) {
                 //do nothing in this case...Android support lib 26 isn't in the project
             }
 
@@ -705,7 +704,8 @@ class GenerateNotification {
                 customView.setImageViewBitmap(R.id.os_bgimage_notif_bgimage_right_aligned, bg_image);
                 customView.setViewVisibility(R.id.os_bgimage_notif_bgimage_right_aligned, 0); // visible
                 customView.setViewVisibility(R.id.os_bgimage_notif_bgimage, 2); // gone
-            } else
+            }
+            else
                 customView.setImageViewBitmap(R.id.os_bgimage_notif_bgimage, bg_image);
 
             notifBuilder.setContent(customView);
@@ -732,8 +732,7 @@ class GenerateNotification {
             if (gcmBundle != null && gcmBundle.has(colorKey)) {
                 return new BigInteger(gcmBundle.optString(colorKey), 16).intValue();
             }
-        } catch (Throwable t) {
-        }
+        } catch (Throwable t) {}
         return null;
     }
 
@@ -776,8 +775,7 @@ class GenerateNotification {
 
                 return Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, true);
             }
-        } catch (Throwable t) {
-        }
+        } catch (Throwable t) {}
 
         return bitmap;
     }
@@ -788,8 +786,7 @@ class GenerateNotification {
 
             try {
                 bitmap = BitmapFactory.decodeStream(currentContext.getAssets().open(bitmapStr));
-            } catch (Throwable t) {
-            }
+            } catch (Throwable t) {}
 
             if (bitmap != null)
                 return bitmap;
@@ -798,8 +795,7 @@ class GenerateNotification {
             for (String extension : image_extensions) {
                 try {
                     bitmap = BitmapFactory.decodeStream(currentContext.getAssets().open(bitmapStr + extension));
-                } catch (Throwable t) {
-                }
+                } catch (Throwable t) {}
                 if (bitmap != null)
                     return bitmap;
             }
@@ -807,8 +803,7 @@ class GenerateNotification {
             int bitmapId = getResourceIcon(bitmapStr);
             if (bitmapId != 0)
                 return BitmapFactory.decodeResource(contextResources, bitmapId);
-        } catch (Throwable t) {
-        }
+        } catch (Throwable t) {}
 
         return null;
     }
@@ -849,8 +844,7 @@ class GenerateNotification {
         // Get system icon resource
         try {
             return drawable.class.getField(iconName).getInt(null);
-        } catch (Throwable t) {
-        }
+        } catch (Throwable t) {}
 
         return 0;
     }
@@ -895,15 +889,13 @@ class GenerateNotification {
         try {
             if (gcmBundle.has("bgac"))
                 return new BigInteger(gcmBundle.optString("bgac", null), 16);
-        } catch (Throwable t) {
-        } // Can throw a parse error parse error.
+        } catch (Throwable t) {} // Can throw a parse error parse error.
 
         try {
             String defaultColor = OSUtils.getManifestMeta(currentContext, "com.onesignal.NotificationAccentColor.DEFAULT");
             if (defaultColor != null)
                 return new BigInteger(defaultColor, 16);
-        } catch (Throwable t) {
-        } // Can throw a parse error parse error.
+        } catch (Throwable t) {} // Can throw a parse error parse error.
 
         return null;
     }
