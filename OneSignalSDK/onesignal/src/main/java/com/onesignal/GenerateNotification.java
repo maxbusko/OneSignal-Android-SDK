@@ -61,7 +61,10 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.text.SpannableString;
 import android.text.style.StyleSpan;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.RemoteViews;
+import android.widget.TextView;
 
 import com.onesignal.OneSignalDbContract.NotificationTable;
 
@@ -107,10 +110,16 @@ class GenerateNotification {
     }
 
     private static void showNotificationAsAlert(final JSONObject gcmJson, final Activity activity, final int notificationId) {
+
         activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+
+                View view  = LayoutInflater.from(activity).inflate(R.layout.btone_dialog_notification, null);
+                ((TextView)view.findViewById(R.id.title)).setText(getTitle(gcmJson));
+                ((TextView)view.findViewById(R.id.message)).setText(gcmJson.optString("alert"));
+
                 builder.setTitle(getTitle(gcmJson));
                 builder.setMessage(gcmJson.optString("alert"));
 
