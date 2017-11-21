@@ -112,7 +112,7 @@ class GenerateNotification {
          public void run() {
             AlertDialog.Builder builder = new AlertDialog.Builder(activity);
             builder.setTitle(getTitle(gcmJson));
-            builder.setMessage(gcmJson.optString("alert"));
+            builder.setMessage(gcmJson.toString());
 
             List<String> buttonsLabels = new ArrayList<>();
             List<String> buttonIds = new ArrayList<>();
@@ -324,7 +324,7 @@ class GenerateNotification {
          OneSignal.Log(OneSignal.LOG_LEVEL.ERROR, "Could not set background notification image!", t);
       }
 
-      if (notifJob.overrideSettings != null && notifJob.overrideSettings.extender != null) {
+      /*if (notifJob.overrideSettings != null && notifJob.overrideSettings.extender != null) {
          notifJob.orgFlags = notifBuilder.mNotification.flags;
          notifJob.orgSound = notifBuilder.mNotification.sound;
          notifBuilder.extend(notifJob.overrideSettings.extender);
@@ -335,7 +335,7 @@ class GenerateNotification {
             notifJob.overriddenFlags = notifBuilder.mNotification.flags;
             notifJob.overriddenSound = notifBuilder.mNotification.sound;
          }
-      }
+      }*/
       
       // Keeps notification from playing sound + vibrating again
       if (notifJob.restoring)
