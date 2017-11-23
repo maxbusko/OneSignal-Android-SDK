@@ -167,6 +167,7 @@ class GenerateNotification {
                     negativeButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
+                            alertDialog.dismiss();
                             Intent intent = generateIntent(notificationId, gcmJson, ACTION_CANCEL_RESERVE);
                             if (intent != null) {
                                 NotificationOpenedProcessor.processIntent(activity, intent);
@@ -177,6 +178,7 @@ class GenerateNotification {
                     positiveButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
+                            alertDialog.dismiss();
                             Intent intent = generateIntent(notificationId, gcmJson, ACTION_RESERVE_ORDER);
                             if (intent != null) {
                                 NotificationOpenedProcessor.processIntent(activity, intent);
@@ -194,6 +196,7 @@ class GenerateNotification {
                         oneButton.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
+                                alertDialog.dismiss();
                                 Intent intent = generateIntent(notificationId, gcmJson, ACTION_ORDER_CANCELED);
                                 if (intent != null) {
                                     NotificationOpenedProcessor.processIntent(activity, intent);
@@ -207,6 +210,7 @@ class GenerateNotification {
                         oneButton.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
+                                alertDialog.dismiss();
                                 Intent intent = generateIntent(notificationId, gcmJson, ACTION_ORDER_CHANGED_ACCEPT);
                                 if (intent != null) {
                                     NotificationOpenedProcessor.processIntent(activity, intent);
