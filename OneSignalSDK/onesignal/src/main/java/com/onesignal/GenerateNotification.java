@@ -109,21 +109,107 @@ class GenerateNotification {
 
         showNotification(notifJob);
     }
-
+    public static final int ACTION_RESERVE_ORDER = 8;
+    public static final int ACTION_CANCEL_RESERVE = 9;
+    public static final int ACTION_NEW_ORDER = 3;
+    public static final int ACTION_ORDER_CHANGED = 2;
+    public static final int ACTION_ORDER_CHANGED_ACCEPT = 22;
+    public static final int ACTION_ORDER_CANCELED = 7;
     private static void showNotificationAsAlert(final JSONObject gcmJson, final Activity activity, final int notificationId) {
 
         activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                AlertDialog.Builder builder = new AlertDialog.Builder(activity);
 
-                View view  = LayoutInflater.from(activity).inflate(R.layout.btone_dialog_notification, null);
-                ((TextView)view.findViewById(R.id.title)).setText("BTONE");
-                ((TextView)view.findViewById(R.id.message)).setText(gcmJson.optString("alert"));
-                Log.d("checkJSONE", gcmJson.toString());
+                String str = gcmJson.optString("custom");
+                str = str.replaceAll("\\\\\\\\", "");
+                try {
+                    JSONObject obj = new JSONObject(str);
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+
+                    View view  = LayoutInflater.from(activity).inflate(R.layout.btone_dialog_notification, null);
+                    ((TextView)view.findViewById(R.id.title)).setText("BTONE");
+                    ((TextView)view.findViewById(R.id.message)).setText(gcmJson.optString("alert"));
+
+                    final int orderId = obj.getJSONObject("a").getInt("orderId");
+                    int actionType = obj.getJSONObject("a").getInt("actionType");
+                    long changingStateTime = obj.getJSONObject("a").getLong("changingStateTime");
+
+                    Intent buttonIntent = getNewBaseIntent(notificationId);
+                    buttonIntent.putExtra("action_button", true);
+                    buttonIntent.putExtra("from_alert", true);
+                    buttonIntent.putExtra("onesignal_data", gcmJson.toString());
+                    if (gcmJson.has("grp"))
+                        buttonIntent.putExtra("grp", gcmJson.optString("grp"));
+
+                    final Intent finalButtonIntent = buttonIntent;
+
+                    View twoButtons = view.findViewById(R.id.buttonsCont);
+                    View negativeButton = view.findViewById(R.id.negativeButton);
+                    negativeButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            finalButtonIntent.putExtra("order_id", orderId);
+                            finalButtonIntent.putExtra("action", ACTION_CANCEL_RESERVE);
+                            NotificationOpenedProcessor.processIntent(activity, finalButtonIntent);
+                        }
+                    });
+                    View positiveButton = view.findViewById(R.id.positiveButton);
+                    positiveButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            finalButtonIntent.putExtra("order_id", orderId);
+                            finalButtonIntent.putExtra("action", ACTION_RESERVE_ORDER);
+                            NotificationOpenedProcessor.processIntent(activity, finalButtonIntent);
+                        }
+                    });
+                    View oneButton = view.findViewById(R.id.singleButton);
+                    if(actionType==ACTION_NEW_ORDER){
+                        twoButtons.setVisibility(View.VISIBLE);
+                        oneButton.setVisibility(View.GONE);
+                    }else if(actionType == ACTION_ORDER_CANCELED){
+                        twoButtons.setVisibility(View.GONE);
+                        oneButton.setVisibility(View.VISIBLE);
+                        oneButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                finalButtonIntent.putExtra("order_id", orderId);
+                                finalButtonIntent.putExtra("action", ACTION_ORDER_CANCELED);
+                                NotificationOpenedProcessor.processIntent(activity, finalButtonIntent);
+                            }
+                        });
+                    }else if(actionType == ACTION_ORDER_CHANGED){
+                        twoButtons.setVisibility(View.GONE);
+                        oneButton.setVisibility(View.VISIBLE);
+                        oneButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                finalButtonIntent.putExtra("order_id", orderId);
+                                finalButtonIntent.putExtra("action", ACTION_ORDER_CHANGED_ACCEPT);
+                                NotificationOpenedProcessor.processIntent(activity, finalButtonIntent);
+                            }
+                        });
+                    }else{
+                        twoButtons.setVisibility(View.GONE);
+                        oneButton.setVisibility(View.GONE);
+                    }
+
+                    builder.setView(view);
+
+                    AlertDialog alertDialog = builder.create();
+                    alertDialog.setCanceledOnTouchOutside(false);
+                    alertDialog.show();
+
+                } catch (JSONException e) {
+                    Log.d("OneSignal",e.getMessage());
+                }
+
+
+
                 //builder.setTitle(getTitle(gcmJson));
                 //builder.setMessage(gcmJson.optString("alert"));
-                builder.setView(view);
+
 
                 /*List<String> buttonsLabels = new ArrayList<>();
                 List<String> buttonIds = new ArrayList<>();
@@ -174,10 +260,6 @@ class GenerateNotification {
                     else if (i == 2)
                         builder.setPositiveButton(buttonsLabels.get(i), buttonListener);
                 }*/
-
-                AlertDialog alertDialog = builder.create();
-                alertDialog.setCanceledOnTouchOutside(false);
-                alertDialog.show();
             }
         });
     }
