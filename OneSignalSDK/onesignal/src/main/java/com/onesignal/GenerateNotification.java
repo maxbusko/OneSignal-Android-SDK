@@ -140,6 +140,8 @@ class GenerateNotification {
         }
     }
 
+    private static AlertDialog alertDialog;
+
     private static void showNotificationAsAlert(final JSONObject gcmJson, final Activity activity, final int notificationId) {
 
         activity.runOnUiThread(new Runnable() {
@@ -218,7 +220,11 @@ class GenerateNotification {
 
                     builder.setView(view);
 
-                    AlertDialog alertDialog = builder.create();
+                    if (alertDialog != null) {
+                        alertDialog.dismiss();
+                    }
+
+                    alertDialog = builder.create();
                     alertDialog.setCanceledOnTouchOutside(false);
                     alertDialog.show();
 
