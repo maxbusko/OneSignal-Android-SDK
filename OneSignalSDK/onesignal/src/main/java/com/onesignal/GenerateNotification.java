@@ -119,7 +119,7 @@ class GenerateNotification {
     public static final int ACTION_ORDER_CHANGED_ACCEPT = 22;
     public static final int ACTION_ORDER_CANCELED = 7;
 
-    /*private static Intent generateIntent(int notificationId, JSONObject gcmJson, int action) {
+    private static Intent generateIntent(int notificationId, JSONObject gcmJson, int action) {
         String str = gcmJson.optString("custom");
         str = str.replaceAll("\\\\\\\\", "");
         try {
@@ -138,7 +138,7 @@ class GenerateNotification {
         } catch (JSONException e) {
             return null;
         }
-    }*/
+    }
 
     private static void showNotificationAsAlert(final JSONObject gcmJson, final Activity activity, final int notificationId) {
 
@@ -165,20 +165,20 @@ class GenerateNotification {
                     negativeButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            //Intent intent = generateIntent(notificationId, gcmJson, ACTION_CANCEL_RESERVE);
-                            //if (intent != null) {
-                            //    NotificationOpenedProcessor.processIntent(activity, intent);
-                            //}
+                            Intent intent = generateIntent(notificationId, gcmJson, ACTION_CANCEL_RESERVE);
+                            if (intent != null) {
+                                NotificationOpenedProcessor.processIntent(activity, intent);
+                            }
                         }
                     });
                     View positiveButton = view.findViewById(R.id.positiveButton);
                     positiveButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            //Intent intent = generateIntent(notificationId, gcmJson, ACTION_RESERVE_ORDER);
-                            //if (intent != null) {
-                            //    NotificationOpenedProcessor.processIntent(activity, intent);
-                            //}
+                            Intent intent = generateIntent(notificationId, gcmJson, ACTION_RESERVE_ORDER);
+                            if (intent != null) {
+                                NotificationOpenedProcessor.processIntent(activity, intent);
+                            }
                         }
                     });
                     Button oneButton = view.findViewById(R.id.singleButton);
@@ -192,10 +192,10 @@ class GenerateNotification {
                         oneButton.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                //Intent intent = generateIntent(notificationId, gcmJson, ACTION_ORDER_CANCELED);
-                                //if (intent != null) {
-                                //    NotificationOpenedProcessor.processIntent(activity, intent);
-                                //}
+                                Intent intent = generateIntent(notificationId, gcmJson, ACTION_ORDER_CANCELED);
+                                if (intent != null) {
+                                    NotificationOpenedProcessor.processIntent(activity, intent);
+                                }
                             }
                         });
                     } else if (actionType == ACTION_ORDER_CHANGED) {
@@ -205,10 +205,10 @@ class GenerateNotification {
                         oneButton.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                /*Intent intent = generateIntent(notificationId, gcmJson, ACTION_ORDER_CHANGED_ACCEPT);
+                                Intent intent = generateIntent(notificationId, gcmJson, ACTION_ORDER_CHANGED_ACCEPT);
                                 if (intent != null) {
                                     NotificationOpenedProcessor.processIntent(activity, intent);
-                                }*/
+                                }
                             }
                         });
                     } else {
