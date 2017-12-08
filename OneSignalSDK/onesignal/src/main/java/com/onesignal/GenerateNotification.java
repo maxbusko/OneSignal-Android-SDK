@@ -27,7 +27,6 @@
 
 package com.onesignal;
 
-import java.io.IOException;
 import java.lang.reflect.Field;
 import java.math.BigInteger;
 import java.net.URL;
@@ -136,19 +135,6 @@ class GenerateNotification {
             return buttonIntent;
         } catch (JSONException e) {
             return null;
-        }
-    }
-
-    private long getChangingStateTime(long orderId) {
-        try {
-            erpico.emdriveradroidbtone.methods.BTONEGetOrderMethod.Result result = RestUtils.postForObject(getString(R.string.ws_url), new erpico.emdriveradroidbtone.methods.BTONEGetOrderMethod(orderId, Prefs.getString(Prefs.TOKEN)), erpico.emdriveradroidbtone.methods.BTONEGetOrderMethod.Result.class);
-            if (result != null && result.error == 0) {
-                return result.order.getChangingStateTime();
-            } else {
-                return 0;
-            }
-        } catch (IOException e) {
-            return 0;
         }
     }
 
