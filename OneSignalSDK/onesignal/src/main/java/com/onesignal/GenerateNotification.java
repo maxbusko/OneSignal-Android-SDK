@@ -319,6 +319,7 @@ class GenerateNotification {
                             }
                         });
                     } else {
+                        builder.setMessage(actionType+"!");
                         twoButtons.setVisibility(View.GONE);
                         oneButton.setVisibility(View.GONE);
                     }
