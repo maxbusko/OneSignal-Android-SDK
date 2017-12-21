@@ -124,6 +124,8 @@ class GenerateNotification {
     public static final int ACTION_ORDER_CANCELED = 7;
     public static final int ACTION_ORDER_4FIVE_YES = 10;
     public static final int ACTION_ORDER_4FIVE_NO = 20;
+    public static final int ACTION_ORDER_FIVE_YES = 100;
+    public static final int ACTION_ORDER_FIVE_NO = 200;
 
     private static Intent generateIntent(int notificationId, JSONObject gcmJson, int action) {
         String str = gcmJson.optString("custom");
@@ -266,6 +268,51 @@ class GenerateNotification {
                                 }
                                 alertDialog.dismiss();
                                 Intent intent = generateIntent(notificationId, gcmJson, ACTION_ORDER_4FIVE_YES);
+                                if (intent != null) {
+                                    NotificationOpenedProcessor.processIntent(activity, intent);
+                                }
+                            }
+                        });
+                    } else if(actionType == ACTION_FIVE_MIN){
+                        if (vibrator != null && vibrator.hasVibrator()) {
+                            vibrator.vibrate(5000);
+                        }
+
+                        Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
+                        final Ringtone ringtone = RingtoneManager.getRingtone(activity, notification);
+                        ringtone.play();
+
+                        twoButtons.setVisibility(View.VISIBLE);
+                        oneButton.setVisibility(View.GONE);
+                        negativeButton.setText("Нет");
+                        negativeButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                if (vibrator != null) {
+                                    vibrator.cancel();
+                                }
+                                if (ringtone.isPlaying()) {
+                                    ringtone.stop();
+                                }
+                                alertDialog.dismiss();
+                                Intent intent = generateIntent(notificationId, gcmJson, ACTION_ORDER_FIVE_NO);
+                                if (intent != null) {
+                                    NotificationOpenedProcessor.processIntent(activity, intent);
+                                }
+                            }
+                        });
+                        positiveButton.setText("Да");
+                        positiveButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                if (vibrator != null) {
+                                    vibrator.cancel();
+                                }
+                                if (ringtone.isPlaying()) {
+                                    ringtone.stop();
+                                }
+                                alertDialog.dismiss();
+                                Intent intent = generateIntent(notificationId, gcmJson, ACTION_ORDER_FIVE_YES);
                                 if (intent != null) {
                                     NotificationOpenedProcessor.processIntent(activity, intent);
                                 }
