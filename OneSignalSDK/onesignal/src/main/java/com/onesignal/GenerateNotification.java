@@ -57,6 +57,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Vibrator;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.text.SpannableString;
@@ -113,9 +114,13 @@ class GenerateNotification {
     public static final int ACTION_RESERVE_ORDER = 8;
     public static final int ACTION_CANCEL_RESERVE = 9;
     public static final int ACTION_NEW_ORDER = 3;
+    public static final int ACTION_FIVE_MIN = 1;
+    public static final int ACTION_4FIVE_MIN = 0;
     public static final int ACTION_ORDER_CHANGED = 2;
     public static final int ACTION_ORDER_CHANGED_ACCEPT = 22;
     public static final int ACTION_ORDER_CANCELED = 7;
+    public static final int ACTION_ORDER_4FIVE_YES = 10;
+    public static final int ACTION_ORDER_4FIVE_NO = 20;
 
     private static Intent generateIntent(int notificationId, JSONObject gcmJson, int action) {
         String str = gcmJson.optString("custom");
@@ -146,6 +151,8 @@ class GenerateNotification {
             @Override
             public void run() {
 
+                final Vibrator vibrator = (Vibrator) activity.getSystemService(Context.VIBRATOR_SERVICE);
+
                 String str = gcmJson.optString("custom");
                 str = str.replaceAll("\\\\\\\\", "");
                 try {
@@ -161,7 +168,7 @@ class GenerateNotification {
                     long changingStateTime = obj.getJSONObject("a").getLong("changingStateTime");
 
                     View twoButtons = view.findViewById(R.id.buttonsCont);
-                    View negativeButton = view.findViewById(R.id.negativeButton);
+                    Button negativeButton = view.findViewById(R.id.negativeButton);
                     negativeButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
@@ -172,7 +179,7 @@ class GenerateNotification {
                             }
                         }
                     });
-                    View positiveButton = view.findViewById(R.id.positiveButton);
+                    Button positiveButton = view.findViewById(R.id.positiveButton);
                     positiveButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
@@ -210,6 +217,42 @@ class GenerateNotification {
                             public void onClick(View view) {
                                 alertDialog.dismiss();
                                 Intent intent = generateIntent(notificationId, gcmJson, ACTION_ORDER_CHANGED_ACCEPT);
+                                if (intent != null) {
+                                    NotificationOpenedProcessor.processIntent(activity, intent);
+                                }
+                            }
+                        });
+                    } else if (actionType == ACTION_4FIVE_MIN) {
+
+                        if(vibrator!=null && vibrator.hasVibrator()){
+                            vibrator.vibrate(5000);
+                        }
+
+                        twoButtons.setVisibility(View.VISIBLE);
+                        oneButton.setVisibility(View.GONE);
+                        negativeButton.setText("Нет, есть проблема");
+                        negativeButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                if (vibrator != null) {
+                                    vibrator.cancel();
+                                }
+                                alertDialog.dismiss();
+                                Intent intent = generateIntent(notificationId, gcmJson, ACTION_ORDER_4FIVE_NO);
+                                if (intent != null) {
+                                    NotificationOpenedProcessor.processIntent(activity, intent);
+                                }
+                            }
+                        });
+                        positiveButton.setText("Да");
+                        positiveButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                if (vibrator != null) {
+                                    vibrator.cancel();
+                                }
+                                alertDialog.dismiss();
+                                Intent intent = generateIntent(notificationId, gcmJson, ACTION_ORDER_4FIVE_YES);
                                 if (intent != null) {
                                     NotificationOpenedProcessor.processIntent(activity, intent);
                                 }
