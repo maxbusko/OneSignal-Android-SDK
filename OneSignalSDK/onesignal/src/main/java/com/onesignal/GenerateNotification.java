@@ -27,6 +27,7 @@
 
 package com.onesignal;
 
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.math.BigInteger;
 import java.net.URL;
@@ -287,6 +288,8 @@ class GenerateNotification {
 
                 } catch (JSONException e) {
                     Log.d("OneSignal", e.getMessage());
+                    AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                    builder.setMessage(e.getMessage()).show();
                 }
 
 
