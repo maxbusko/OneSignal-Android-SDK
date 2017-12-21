@@ -55,6 +55,8 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Vibrator;
@@ -165,7 +167,7 @@ class GenerateNotification {
                     ((TextView) view.findViewById(R.id.message)).setText(gcmJson.optString("alert"));
 
                     int actionType = obj.getJSONObject("a").getInt("actionType");
-                    long changingStateTime = obj.getJSONObject("a").getLong("changingStateTime");
+                    //long changingStateTime = obj.getJSONObject("a").getLong("changingStateTime");
 
                     View twoButtons = view.findViewById(R.id.buttonsCont);
                     Button negativeButton = view.findViewById(R.id.negativeButton);
@@ -224,9 +226,13 @@ class GenerateNotification {
                         });
                     } else if (actionType == ACTION_4FIVE_MIN) {
 
-                        if(vibrator!=null && vibrator.hasVibrator()){
+                        if (vibrator != null && vibrator.hasVibrator()) {
                             vibrator.vibrate(5000);
                         }
+
+                        Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
+                        final Ringtone ringtone = RingtoneManager.getRingtone(activity, notification);
+                        ringtone.play();
 
                         twoButtons.setVisibility(View.VISIBLE);
                         oneButton.setVisibility(View.GONE);
@@ -236,6 +242,9 @@ class GenerateNotification {
                             public void onClick(View view) {
                                 if (vibrator != null) {
                                     vibrator.cancel();
+                                }
+                                if (ringtone.isPlaying()) {
+                                    ringtone.stop();
                                 }
                                 alertDialog.dismiss();
                                 Intent intent = generateIntent(notificationId, gcmJson, ACTION_ORDER_4FIVE_NO);
@@ -250,6 +259,9 @@ class GenerateNotification {
                             public void onClick(View view) {
                                 if (vibrator != null) {
                                     vibrator.cancel();
+                                }
+                                if (ringtone.isPlaying()) {
+                                    ringtone.stop();
                                 }
                                 alertDialog.dismiss();
                                 Intent intent = generateIntent(notificationId, gcmJson, ACTION_ORDER_4FIVE_YES);
