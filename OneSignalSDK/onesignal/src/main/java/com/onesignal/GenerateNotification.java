@@ -27,7 +27,6 @@
 
 package com.onesignal;
 
-import java.io.IOException;
 import java.lang.reflect.Field;
 import java.math.BigInteger;
 import java.net.URL;
@@ -48,7 +47,6 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
@@ -114,18 +112,25 @@ class GenerateNotification {
         showNotification(notifJob);
     }
 
+    public static final int ACTION_4FIVE_MIN = 0;
+    public static final int ACTION_FIVE_MIN = 1;
+    public static final int ACTION_20_MIN = 2;
+    public static final int ACTION_40_MIN = 3;
+    public static final int ACTION_NEW_ORDER = 4;
+    public static final int ACTION_ORDER_CHANGED = 5;
+    public static final int ACTION_ORDER_CANCELED = 7;
+
     public static final int ACTION_RESERVE_ORDER = 8;
     public static final int ACTION_CANCEL_RESERVE = 9;
-    public static final int ACTION_NEW_ORDER = 3;
-    public static final int ACTION_FIVE_MIN = 1;
-    public static final int ACTION_4FIVE_MIN = 0;
-    public static final int ACTION_ORDER_CHANGED = 2;
     public static final int ACTION_ORDER_CHANGED_ACCEPT = 22;
-    public static final int ACTION_ORDER_CANCELED = 7;
     public static final int ACTION_ORDER_4FIVE_YES = 10;
     public static final int ACTION_ORDER_4FIVE_NO = 20;
     public static final int ACTION_ORDER_FIVE_YES = 100;
     public static final int ACTION_ORDER_FIVE_NO = 200;
+    public static final int ACTION_ORDER_20_YES = 101;
+    public static final int ACTION_ORDER_20_NO = 201;
+    public static final int ACTION_ORDER_40_YES = 121;
+    public static final int ACTION_ORDER_40_NO = 221;
 
     private static Intent generateIntent(int notificationId, JSONObject gcmJson, int action) {
         String str = gcmJson.optString("custom");
@@ -313,6 +318,58 @@ class GenerateNotification {
                                 }
                                 alertDialog.dismiss();
                                 Intent intent = generateIntent(notificationId, gcmJson, ACTION_ORDER_FIVE_YES);
+                                if (intent != null) {
+                                    NotificationOpenedProcessor.processIntent(activity, intent);
+                                }
+                            }
+                        });
+                    } else if(actionType == ACTION_20_MIN){
+
+                        twoButtons.setVisibility(View.VISIBLE);
+                        oneButton.setVisibility(View.GONE);
+                        negativeButton.setText("Еще еду");
+                        negativeButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                alertDialog.dismiss();
+                                Intent intent = generateIntent(notificationId, gcmJson, ACTION_ORDER_20_NO);
+                                if (intent != null) {
+                                    NotificationOpenedProcessor.processIntent(activity, intent);
+                                }
+                            }
+                        });
+                        positiveButton.setText("Да");
+                        positiveButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                alertDialog.dismiss();
+                                Intent intent = generateIntent(notificationId, gcmJson, ACTION_ORDER_20_YES);
+                                if (intent != null) {
+                                    NotificationOpenedProcessor.processIntent(activity, intent);
+                                }
+                            }
+                        });
+                    } else if(actionType == ACTION_40_MIN){
+
+                        twoButtons.setVisibility(View.VISIBLE);
+                        oneButton.setVisibility(View.GONE);
+                        negativeButton.setText("Еще нет");
+                        negativeButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                alertDialog.dismiss();
+                                Intent intent = generateIntent(notificationId, gcmJson, ACTION_ORDER_40_NO);
+                                if (intent != null) {
+                                    NotificationOpenedProcessor.processIntent(activity, intent);
+                                }
+                            }
+                        });
+                        positiveButton.setText("Да");
+                        positiveButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                alertDialog.dismiss();
+                                Intent intent = generateIntent(notificationId, gcmJson, ACTION_ORDER_40_YES);
                                 if (intent != null) {
                                     NotificationOpenedProcessor.processIntent(activity, intent);
                                 }
