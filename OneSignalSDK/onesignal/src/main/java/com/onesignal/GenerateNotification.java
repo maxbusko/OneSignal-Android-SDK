@@ -118,6 +118,7 @@ class GenerateNotification {
     public static final int ACTION_40_MIN = 3;
     public static final int ACTION_NEW_ORDER = 4;
     public static final int ACTION_ORDER_CHANGED = 5;
+    public static final int ACTION_CAR_ASSIGN = 6;
     public static final int ACTION_ORDER_CANCELED = 7;
 
     public static final int ACTION_RESERVE_ORDER = 8;
@@ -204,6 +205,11 @@ class GenerateNotification {
                     if (actionType == ACTION_NEW_ORDER) {
                         twoButtons.setVisibility(View.VISIBLE);
                         oneButton.setVisibility(View.GONE);
+                        positiveButton.setText("Взять");
+                    }else if(actionType == ACTION_CAR_ASSIGN){
+                        twoButtons.setVisibility(View.VISIBLE);
+                        oneButton.setVisibility(View.GONE);
+                        positiveButton.setText("Принять");
                     } else if (actionType == ACTION_ORDER_CANCELED) {
                         oneButton.setText("Отправить в архив");
                         twoButtons.setVisibility(View.GONE);
