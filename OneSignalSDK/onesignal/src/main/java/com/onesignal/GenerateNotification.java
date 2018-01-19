@@ -206,14 +206,17 @@ class GenerateNotification {
                         twoButtons.setVisibility(View.VISIBLE);
                         oneButton.setVisibility(View.GONE);
                         positiveButton.setText("Взять");
+                        AudioPlayer.play(activity, R.raw.neworder);
                     }else if(actionType == ACTION_CAR_ASSIGN){
                         twoButtons.setVisibility(View.VISIBLE);
                         oneButton.setVisibility(View.GONE);
                         positiveButton.setText("Принять");
+                        AudioPlayer.play(activity, R.raw.neworder);
                     } else if (actionType == ACTION_ORDER_CANCELED) {
                         oneButton.setText("Отправить в архив");
                         twoButtons.setVisibility(View.GONE);
                         oneButton.setVisibility(View.VISIBLE);
+                        AudioPlayer.play(activity, R.raw.denial);
                         oneButton.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
@@ -228,6 +231,7 @@ class GenerateNotification {
                         oneButton.setText("OK");
                         twoButtons.setVisibility(View.GONE);
                         oneButton.setVisibility(View.VISIBLE);
+                        AudioPlayer.play(activity, R.raw.neworder);
                         oneButton.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
@@ -239,27 +243,13 @@ class GenerateNotification {
                             }
                         });
                     } else if (actionType == ACTION_4FIVE_MIN) {
-
-                        if (vibrator != null && vibrator.hasVibrator()) {
-                            vibrator.vibrate(5000);
-                        }
-
-                        Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
-                        final Ringtone ringtone = RingtoneManager.getRingtone(activity, notification);
-                        ringtone.play();
-
                         twoButtons.setVisibility(View.VISIBLE);
                         oneButton.setVisibility(View.GONE);
                         negativeButton.setText("Нет, есть проблема");
+                        AudioPlayer.play(activity, R.raw.answer);
                         negativeButton.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                if (vibrator != null) {
-                                    vibrator.cancel();
-                                }
-                                if (ringtone.isPlaying()) {
-                                    ringtone.stop();
-                                }
                                 alertDialog.dismiss();
                                 Intent intent = generateIntent(notificationId, gcmJson, ACTION_ORDER_4FIVE_NO);
                                 if (intent != null) {
@@ -271,12 +261,6 @@ class GenerateNotification {
                         positiveButton.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                if (vibrator != null) {
-                                    vibrator.cancel();
-                                }
-                                if (ringtone.isPlaying()) {
-                                    ringtone.stop();
-                                }
                                 alertDialog.dismiss();
                                 Intent intent = generateIntent(notificationId, gcmJson, ACTION_ORDER_4FIVE_YES);
                                 if (intent != null) {
@@ -285,26 +269,13 @@ class GenerateNotification {
                             }
                         });
                     } else if(actionType == ACTION_FIVE_MIN){
-                        if (vibrator != null && vibrator.hasVibrator()) {
-                            vibrator.vibrate(5000);
-                        }
-
-                        Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
-                        final Ringtone ringtone = RingtoneManager.getRingtone(activity, notification);
-                        ringtone.play();
-
                         twoButtons.setVisibility(View.VISIBLE);
                         oneButton.setVisibility(View.GONE);
                         negativeButton.setText("Нет");
+                        AudioPlayer.play(activity, R.raw.answer);
                         negativeButton.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                if (vibrator != null) {
-                                    vibrator.cancel();
-                                }
-                                if (ringtone.isPlaying()) {
-                                    ringtone.stop();
-                                }
                                 alertDialog.dismiss();
                                 Intent intent = generateIntent(notificationId, gcmJson, ACTION_ORDER_FIVE_NO);
                                 if (intent != null) {
@@ -316,12 +287,6 @@ class GenerateNotification {
                         positiveButton.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                if (vibrator != null) {
-                                    vibrator.cancel();
-                                }
-                                if (ringtone.isPlaying()) {
-                                    ringtone.stop();
-                                }
                                 alertDialog.dismiss();
                                 Intent intent = generateIntent(notificationId, gcmJson, ACTION_ORDER_FIVE_YES);
                                 if (intent != null) {
@@ -330,10 +295,10 @@ class GenerateNotification {
                             }
                         });
                     } else if(actionType == ACTION_20_MIN){
-
                         twoButtons.setVisibility(View.VISIBLE);
                         oneButton.setVisibility(View.GONE);
                         negativeButton.setText("Еще еду");
+                        AudioPlayer.play(activity, R.raw.answer);
                         negativeButton.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
@@ -356,10 +321,10 @@ class GenerateNotification {
                             }
                         });
                     } else if(actionType == ACTION_40_MIN){
-
                         twoButtons.setVisibility(View.VISIBLE);
                         oneButton.setVisibility(View.GONE);
                         negativeButton.setText("Еще нет");
+                        AudioPlayer.play(activity, R.raw.answer);
                         negativeButton.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
