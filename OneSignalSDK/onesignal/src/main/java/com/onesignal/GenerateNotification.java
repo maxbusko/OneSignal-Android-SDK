@@ -103,8 +103,17 @@ class GenerateNotification {
 
     static void fromJsonPayload(NotificationGenerationJob notifJob) {
         setStatics(notifJob.context);
+        boolean showAsAlert = notifJob.showAsAlert;
+        String str = notifJob.jsonPayload.optString("custom");
+        str = str.replaceAll("\\\\\\\\", "");
+        try {
+            JSONObject obj = new JSONObject(str);
+            int actionType = obj.getJSONObject("a").getInt("actionType");
+            showAsAlert = ((actionType == ACTION_FIVE_MIN)||(actionType==ACTION_20_MIN)||(actionType==ACTION_40_MIN)||(actionType==ACTION_4FIVE_MIN));
+        } catch (JSONException ignored) {
+        }
 
-        if (!notifJob.restoring && notifJob.showAsAlert && ActivityLifecycleHandler.curActivity != null) {
+        if (!notifJob.restoring && showAsAlert && ActivityLifecycleHandler.curActivity != null) {
             showNotificationAsAlert(notifJob.jsonPayload, ActivityLifecycleHandler.curActivity, notifJob.getAndroidId());
             return;
         }
@@ -161,8 +170,6 @@ class GenerateNotification {
         activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-
-                final Vibrator vibrator = (Vibrator) activity.getSystemService(Context.VIBRATOR_SERVICE);
 
                 String str = gcmJson.optString("custom");
                 str = str.replaceAll("\\\\\\\\", "");
