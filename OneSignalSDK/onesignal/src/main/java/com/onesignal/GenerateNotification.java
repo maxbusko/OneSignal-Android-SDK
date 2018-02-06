@@ -210,9 +210,9 @@ class GenerateNotification {
                     });
                     Button oneButton = view.findViewById(R.id.singleButton);
                     if (actionType == ACTION_NEW_ORDER) {
-                        twoButtons.setVisibility(View.VISIBLE);
-                        oneButton.setVisibility(View.GONE);
-                        positiveButton.setText("Взять");
+                        twoButtons.setVisibility(View.GONE);
+                        oneButton.setVisibility(View.VISIBLE);
+                        oneButton.setText("Взять");
                         AudioPlayer.play(activity, R.raw.neworder);
                     }else if(actionType == ACTION_CAR_ASSIGN){
                         twoButtons.setVisibility(View.VISIBLE);
