@@ -109,7 +109,9 @@ class GenerateNotification {
         try {
             JSONObject obj = new JSONObject(str);
             int actionType = obj.getJSONObject("a").getInt("actionType");
-            showAsAlert = ((actionType == ACTION_FIVE_MIN)||(actionType==ACTION_20_MIN)||(actionType==ACTION_40_MIN)||(actionType==ACTION_4FIVE_MIN));
+            if((actionType == ACTION_FIVE_MIN)||(actionType==ACTION_20_MIN)||(actionType==ACTION_40_MIN)||(actionType==ACTION_4FIVE_MIN)){
+                showAsAlert = true;
+            }
         } catch (JSONException ignored) {
         }
 
