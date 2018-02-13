@@ -306,7 +306,7 @@ class GenerateNotification {
                     } else if(actionType == ACTION_20_MIN){
                         twoButtons.setVisibility(View.VISIBLE);
                         oneButton.setVisibility(View.GONE);
-                        negativeButton.setText("Еще еду");
+                        negativeButton.setText("Еще жду");
                         AudioPlayer.play(activity, R.raw.answer);
                         negativeButton.setOnClickListener(new View.OnClickListener() {
                             @Override
