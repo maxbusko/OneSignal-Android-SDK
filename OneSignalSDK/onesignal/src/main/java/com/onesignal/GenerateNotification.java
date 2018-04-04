@@ -167,6 +167,7 @@ class GenerateNotification {
 
     private static AlertDialog alertDialog;
 
+
     public static AlertDialog getAlertDialog(){
         return alertDialog;
     }
