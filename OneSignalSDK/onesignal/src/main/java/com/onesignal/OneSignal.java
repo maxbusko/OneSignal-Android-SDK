@@ -1952,6 +1952,11 @@ public class OneSignal {
          return;
       }
 
+      AlertDialog alertDialog = GenerateNotification.getAlertDialog();
+      if(alertDialog != null){
+         alertDialog.dismiss();
+      }
+
       runCancelNotification.run();
 
       NotificationManager notificationManager = (NotificationManager)appContext.getSystemService(Context.NOTIFICATION_SERVICE);

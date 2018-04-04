@@ -167,6 +167,10 @@ class GenerateNotification {
 
     private static AlertDialog alertDialog;
 
+    public static AlertDialog getAlertDialog(){
+        return alertDialog;
+    }
+
     private static void showNotificationAsAlert(final JSONObject gcmJson, final Activity activity, final int notificationId) {
 
         activity.runOnUiThread(new Runnable() {
